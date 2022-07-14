@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+android {
+    compileSdkVersion 32
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 32
+    }
+
+    defaultConfig {
+        buildConfigField 'String', 'VERSION_NAME', "\"$VERSION_NAME\""
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.tempo-platform'
+                artifactId = 'tempo-applovin-mediation'
+                version = '0.0.0'
+            }
+        }
+    }
+}
+
+dependencies {
+    api 'com.applovin:applovin-sdk:[11.2,11.5)'
+    api 'com.github.Tempo-Platform:tempo-android-sdk-release:0.0.37'
+}
