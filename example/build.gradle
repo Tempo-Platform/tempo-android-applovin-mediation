@@ -19,9 +19,9 @@ android {
         local.load(rootProject.file('local.properties').newDataInputStream())
 
         def applovinSdkKey = local.get('applovin.sdk.key')
-        if (!(applovinSdkKey instanceof String) || applovinSdkKey.isEmpty()) {
-            throw new RuntimeException("local.properties does not define 'applovin.sdk.key'")
-        }
+//        if (!(applovinSdkKey instanceof String) || applovinSdkKey.isEmpty()) {
+//            throw new RuntimeException("local.properties does not define 'applovin.sdk.key'")
+//        }
 
         manifestPlaceholders = [
                 applovinSdkKey: applovinSdkKey
