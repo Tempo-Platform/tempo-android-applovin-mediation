@@ -2,14 +2,11 @@ package com.applovin.mediation.adapters;
 
 import android.app.Activity;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import androidx.annotation.Keep;
-import androidx.lifecycle.Lifecycle;
 
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
-import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
@@ -21,11 +18,10 @@ import com.tempoplatform.ads.InterstitialView;
 public class TempoMediationAdapter extends MediationAdapterBase implements MaxInterstitialAdapter {
 
     private static final String LOG_TAG = TempoMediationAdapter.class.getSimpleName();
-    private InterstitialView interstitialView = new InterstitialView();
+    private InterstitialView interstitialView;
     private boolean ready;
 
     private MaxInterstitialAdapterListener listener;
-    private MaxAdViewAdapterListener mBannerListener;
 
     public TempoMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
@@ -33,61 +29,48 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void initialize(MaxAdapterInitializationParameters maxAdapterInitializationParameters, Activity activity, final OnCompletionListener onCompletionListener) {
-        Log.d(LOG_TAG, "initialization");
-        System.out.println(LOG_TAG);
-        System.out.println("TempoSDK: Initialized");
+        Log.d(LOG_TAG, "Initialized Tempo Adapter");
+        Log.d(LOG_TAG, "Params: " + maxAdapterInitializationParameters.getServerParameters());
     }
 
 
     @Override
     public void loadInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
-        Log.d(LOG_TAG, "load interstitial ad");
-
-        String appkey = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
-        Log.d(LOG_TAG, "load interstitial ad 2");
+        Log.d(LOG_TAG, "Loading Interstitial Ad");
+        String AppId = (String) maxAdapterResponseParameters.getServerParameters().get("app_id");
+        Log.d(LOG_TAG, "AppId: " + AppId);
         listener = maxInterstitialAdapterListener;
-        Log.d(LOG_TAG, "load interstitial ad 3");
-        final AdListener listener = new AdListener() {
+        final AdListener tempoListener = new AdListener() {
             @Override
             public void onAdFetchSucceeded() {
                 Log.d(LOG_TAG, "Ad fetch succeeded");
-                super.onAdFetchSucceeded();
-                TempoMediationAdapter.this.listener.onInterstitialAdLoaded();
+                listener.onInterstitialAdLoaded();
                 ready = true;
             }
 
             @Override
             public void onAdFetchFailed() {
                 Log.d(LOG_TAG, "Ad fetch failed");
-                super.onAdFetchFailed();
-                TempoMediationAdapter.this.listener.onInterstitialAdLoadFailed(new MaxAdapterError(1));
+                listener.onInterstitialAdLoadFailed(new MaxAdapterError(1));
             }
 
             @Override
             public void onInterstitialDisplayed() {
                 Log.d(LOG_TAG, "Ad fetch displayed");
-                super.onInterstitialDisplayed();
-                TempoMediationAdapter.this.listener.onInterstitialAdDisplayed();
+                listener.onInterstitialAdDisplayed();
             }
 
             @Override
             public void onAdClosed() {
-                Log.d(LOG_TAG, "Ad fetch closed");
+                Log.d(LOG_TAG, "Ad closed");
+                listener.onInterstitialAdHidden();
                 ready = false;
-                super.onAdClosed();
             }
         };
-        Log.d(LOG_TAG, "load interstitial ad 5");
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                interstitialView.loadAd(activity, listener);
-            }
+        activity.runOnUiThread(() -> {
+            interstitialView = new InterstitialView();
+            interstitialView.loadAd(activity, tempoListener);
         });
-
-
-        Log.d(LOG_TAG, "load interstitial ad 6");
-        ready = true;
     }
 
     @Override
@@ -103,7 +86,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     @Override
     public void onDestroy() {
         Log.d(LOG_TAG, "onDestroy");
-//        interstitialView = null;
+        interstitialView = null;
+        listener = null;
     }
 
     @Override
