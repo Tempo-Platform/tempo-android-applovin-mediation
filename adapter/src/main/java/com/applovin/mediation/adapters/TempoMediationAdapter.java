@@ -68,7 +68,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
         };
         activity.runOnUiThread(() -> {
-            interstitialView = new InterstitialView();
+            interstitialView = new InterstitialView("8", activity);
             interstitialView.loadAd(activity, tempoListener);
         });
     }
