@@ -39,6 +39,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "Loading Interstitial Ad");
         String AppId = (String) maxAdapterResponseParameters.getServerParameters().get("app_id");
         Log.d(LOG_TAG, "AppId: " + AppId);
+        String cpmFloorStr = (String) maxAdapterResponseParameters.getServerParameters().get("cpm_floor");
+        Log.d(LOG_TAG, "cpmFloor: " + cpmFloorStr);
+        float cpmFloor = Float.parseFloat(cpmFloorStr);
         listener = maxInterstitialAdapterListener;
         final AdListener tempoListener = new AdListener() {
             @Override
@@ -68,8 +71,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
         };
         activity.runOnUiThread(() -> {
-            interstitialView = new InterstitialView("8", activity);
-            interstitialView.loadAd(activity, tempoListener);
+            interstitialView = new InterstitialView(AppId, activity);
+            interstitialView.loadAd(activity, tempoListener, cpmFloor);
         });
     }
 
