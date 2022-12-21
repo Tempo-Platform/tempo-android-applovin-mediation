@@ -36,5 +36,5 @@ afterEvaluate {
 
 dependencies {
     api 'com.applovin:applovin-sdk:[11.2,11.5)'
-    api 'com.github.Tempo-Platform:tempo-android-sdk-release:0.0.41'
+    api 'com.github.Tempo-Platform:tempo-android-sdk-release:0.0.43'
 }

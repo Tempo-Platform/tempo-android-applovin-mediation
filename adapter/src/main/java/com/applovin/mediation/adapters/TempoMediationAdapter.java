@@ -41,7 +41,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "AppId: " + AppId);
         String cpmFloorStr = (String) maxAdapterResponseParameters.getServerParameters().get("cpm_floor");
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
-        float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
+        Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         listener = maxInterstitialAdapterListener;
         final AdListener tempoListener = new AdListener() {
             @Override
