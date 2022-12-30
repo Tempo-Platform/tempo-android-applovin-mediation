@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+    namespace 'com.tempoplatform.adapter.applovin'
     compileSdkVersion 33
 
     defaultConfig {
@@ -47,7 +48,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.github.tempo-platform'
                 artifactId = 'tempo-applovin-mediation'
-                version = '0.0.10'
+                version = '0.0.11'
                 pom {
                     name = 'Tempo Android AppLovin Adapter'
                     description = 'The Tempo Android AppLovin Mediation Adapter.'
@@ -93,6 +94,6 @@ afterEvaluate {
 }
 
 dependencies {
-    api 'com.applovin:applovin-sdk:[11.2,11.5)'
-    api 'io.github.tempo-platform:tempo-android-sdk:0.0.12'
+    implementation 'com.applovin:applovin-sdk:[11.2,11.6)'
+    implementation 'io.github.tempo-platform:tempo-android-sdk:0.0.16'
 }

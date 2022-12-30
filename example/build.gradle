@@ -47,8 +47,9 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:[1,1.5)'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:[2,3)'
+    implementation 'com.applovin:applovin-sdk:[11.2,11.6)'
     implementation project(':adapter')
 //    implementation 'com.github.Tempo-Platform.tempo-android-applovin-mediation:adapter:0.0.3'
 }
