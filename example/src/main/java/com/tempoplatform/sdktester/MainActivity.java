@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                     .setAdvertiserTextViewId(R.id.advertiser_textView)
                     .setIconImageViewId(R.id.icon_image_view)
                     .setMediaContentViewGroupId(R.id.media_view_container)
-                    .setOptionsContentViewGroupId(R.id.options_view)
+                    .setOptionsContentViewGroupId(R.id.ad_options_view)
                     .setCallToActionButtonId(R.id.cta_button)
                     .build();
 
