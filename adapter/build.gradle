@@ -28,8 +28,8 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.tempo-platform'
-                artifactId = 'tempo-applovin-mediation'
-                version = '0.0.0'
+                artifactId = 'adapter'
+                version = '0.1.1'
             }
         }
     }

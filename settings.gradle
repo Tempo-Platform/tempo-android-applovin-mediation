@@ -1,4 +1,3 @@
 rootProject.name = "AppLovin - Tempo"
 
 include ':adapter'
-include ':example'
