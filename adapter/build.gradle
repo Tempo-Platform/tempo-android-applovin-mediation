@@ -29,7 +29,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.tempo-platform'
                 artifactId = 'adapter'
-                version = '0.1.3'
+                version = '0.2.0a'
             }
         }
     }
@@ -37,5 +37,5 @@ afterEvaluate {
 
 dependencies {
     api 'com.applovin:applovin-sdk:[11.2,11.6)'
-    api 'com.github.Tempo-Platform:tempo-android-sdk-release:0.1.4'
+    api 'com.github.Tempo-Platform:tempo-android-sdk-release:0.2.0a'
 }
