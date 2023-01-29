@@ -94,7 +94,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoListener, cpmFloor);
+            interstitialView.loadAd(activity, tempoListener, cpmFloor, true);
         });
     }
 
@@ -157,7 +157,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoListener, cpmFloor);
+            interstitialView.loadAd(activity, tempoListener, cpmFloor, false);
         });
     }
 
