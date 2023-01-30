@@ -22,7 +22,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     private static final String LOG_TAG = TempoMediationAdapter.class.getSimpleName();
     private InterstitialView interstitialView;
-    private boolean ready;
+    private InterstitialView rewardedView;
+    private boolean interstitialReady;
+    private boolean rewardedReady;
 
     private MaxInterstitialAdapterListener interstitialListener;
     private MaxRewardedAdapterListener rewardedListener;
@@ -39,12 +41,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return "8.0.1";
+        return "0.2.3";
     }
 
     @Override
     public String getAdapterVersion() {
-        return "8.0.1";
+        return "0.2.0";
     }
 
     @Override
@@ -52,6 +54,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "onDestroy");
         interstitialView = null;
         interstitialListener = null;
+        rewardedView = null;
         rewardedListener = null;
     }
 
@@ -64,44 +67,44 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         interstitialListener = maxInterstitialAdapterListener;
-        final AdListener tempoListener = new AdListener() {
+        final AdListener tempoInterstitialListener = new AdListener() {
             @Override
-            public void onAdFetchSucceeded() {
-                Log.d(LOG_TAG, "Ad fetch succeeded");
+            public void onAdFetchSucceeded(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " InterstitialAd fetch succeeded");
                 interstitialListener.onInterstitialAdLoaded();
-                ready = true;
+                interstitialReady = true;
             }
 
             @Override
-            public void onAdFetchFailed() {
-                Log.d(LOG_TAG, "Ad fetch failed");
+            public void onAdFetchFailed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " InterstitialAd fetch failed");
                 interstitialListener.onInterstitialAdLoadFailed(new MaxAdapterError(1));
             }
 
             @Override
-            public void onInterstitialDisplayed() {
-                Log.d(LOG_TAG, "Ad fetch displayed");
+            public void onInterstitialDisplayed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " InterstitialAd fetch displayed");
                 interstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
-            public void onAdClosed() {
-                Log.d(LOG_TAG, "Ad closed");
+            public void onAdClosed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " InterstitialAd closed");
                 interstitialListener.onInterstitialAdHidden();
-                ready = false;
+                interstitialReady = false;
             }
         };
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoListener, cpmFloor, true);
+            interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, true);
         });
     }
 
     @Override
     public void showInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
         Log.d(LOG_TAG, "showInterstitial");
-        if (ready) {
+        if (interstitialReady) {
             interstitialView.showAd();
         }
     }
@@ -115,29 +118,29 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         rewardedListener = maxRewardedAdapterListener;
-        final AdListener tempoListener = new AdListener() {
+        final AdListener tempoRewardedListener = new AdListener() {
             @Override
-            public void onAdFetchSucceeded() {
-                Log.d(LOG_TAG, "Ad fetch succeeded");
+            public void onAdFetchSucceeded(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd fetch succeeded");
                 rewardedListener.onRewardedAdLoaded();
-                ready = true;
+                rewardedReady = true;
             }
 
             @Override
-            public void onAdFetchFailed() {
-                Log.d(LOG_TAG, "Ad fetch failed");
+            public void onAdFetchFailed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd fetch failed");
                 rewardedListener.onRewardedAdLoadFailed(new MaxAdapterError(1));
             }
 
             @Override
-            public void onInterstitialDisplayed() {
-                Log.d(LOG_TAG, "Ad fetch displayed");
+            public void onInterstitialDisplayed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd fetch displayed");
                 rewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
-            public void onAdClosed() {
-                Log.d(LOG_TAG, "Max reward set");
+            public void onAdClosed(Boolean isInterstitial) {
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd Max reward set");
                 rewardedListener.onUserRewarded(new MaxReward() {
                     @Override
                     public String getLabel() {
@@ -149,23 +152,23 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                         return MaxReward.DEFAULT_AMOUNT;
                     }
                 });
-                Log.d(LOG_TAG, "Ad closed");
+                Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd closed");
                 rewardedListener.onRewardedAdHidden();
-                ready = false;
+                rewardedReady = false;
             }
         };
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
-            interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoListener, cpmFloor, false);
+            rewardedView = new InterstitialView(AppId, activity);
+            rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, false);
         });
     }
 
     @Override
     public void showRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
         Log.d(LOG_TAG, "showRewarded");
-        if (ready) {
-            interstitialView.showAd();
+        if (rewardedReady) {
+            rewardedView.showAd();
         }
     }
 }
