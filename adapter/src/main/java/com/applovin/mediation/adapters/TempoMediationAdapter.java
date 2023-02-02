@@ -78,7 +78,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             @Override
             public void onAdFetchFailed(Boolean isInterstitial) {
                 Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " InterstitialAd fetch failed");
-                interstitialListener.onInterstitialAdLoadFailed(new MaxAdapterError(1));
+                interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
@@ -129,7 +129,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             @Override
             public void onAdFetchFailed(Boolean isInterstitial) {
                 Log.d(LOG_TAG, (isInterstitial ? "Interstitial" : "Rewarded") + " RewardedAd fetch failed");
-                rewardedListener.onRewardedAdLoadFailed(new MaxAdapterError(1));
+                rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
