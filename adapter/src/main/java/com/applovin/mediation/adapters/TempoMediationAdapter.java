@@ -26,8 +26,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private boolean interstitialReady;
     private boolean rewardedReady;
 
-    private MaxInterstitialAdapterListener interstitialListener;
-    private MaxRewardedAdapterListener rewardedListener;
+    public MaxInterstitialAdapterListener interstitialListener;
+    public MaxRewardedAdapterListener rewardedListener;
 
     public TempoMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
@@ -41,12 +41,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return "0.2.3";
+        return "0.3.0";
     }
 
     @Override
     public String getAdapterVersion() {
-        return "0.2.0";
+        return "0.3.0";
     }
 
     @Override
@@ -63,6 +63,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "Loading Interstitial Ad, params: " + maxAdapterResponseParameters.getCustomParameters());
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
         Log.d(LOG_TAG, "AppId: " + AppId);
+        String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
+        Log.d(LOG_TAG, "Location: " + location);
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
@@ -97,7 +99,11 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, true);
+            if (location != null) {
+                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, true, location);
+            } else {
+                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, true);
+            }
         });
     }
 
@@ -114,6 +120,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "Loading Rewarded Ad, params: " + maxAdapterResponseParameters.getCustomParameters());
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
         Log.d(LOG_TAG, "AppId: " + AppId);
+        String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
+        Log.d(LOG_TAG, "Location: " + location);
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
@@ -160,7 +168,11 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Log.d(LOG_TAG, "cpmFloor: " + cpmFloor);
         activity.runOnUiThread(() -> {
             rewardedView = new InterstitialView(AppId, activity);
-            rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, false);
+            if (location != null) {
+                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, false, location);
+            } else {
+                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, false);
+            }
         });
     }
 
