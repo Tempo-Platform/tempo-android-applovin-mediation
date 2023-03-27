@@ -1,6 +1,7 @@
 package com.applovin.mediation.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.Keep;
@@ -12,7 +13,9 @@ import com.applovin.mediation.adapter.MaxRewardedAdapter;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParameters;
+import com.applovin.mediation.adapter.parameters.MaxAdapterParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
+import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 import com.tempoplatform.ads.InterstitialAdListener;
 import com.tempoplatform.ads.InterstitialView;
@@ -43,12 +46,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return "0.4.11";
+        return "0.4.12";
     }
 
     @Override
     public String getAdapterVersion() {
-        return "0.4.5";
+        return "0.4.6";
     }
 
     @Override
@@ -63,6 +66,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     @Override
     public void loadInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
         Log.d(LOG_TAG, "Loading Interstitial Ad, params: " + maxAdapterResponseParameters.getCustomParameters());
+        maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
         Log.d(LOG_TAG, "AppId: " + AppId);
         String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
@@ -70,6 +75,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
+        String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+        Log.d(LOG_TAG, "placementId: " + placementId);
+
         interstitialListener = maxInterstitialAdapterListener;
         InterstitialAdListener tempoInterstitialListener = new InterstitialAdListener() {
             @Override
@@ -101,9 +109,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
             if (location != null) {
-                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, location);
+                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId, location);
             } else {
-                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor);
+                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId);
             }
         });
     }
@@ -126,6 +134,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
         Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
+        String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+        Log.d(LOG_TAG, "placementId: " + placementId);
+
         rewardedListener = maxRewardedAdapterListener;
         RewardedAdListener tempoRewardedListener = new RewardedAdListener() {
             @Override
@@ -169,9 +180,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         activity.runOnUiThread(() -> {
             rewardedView = new RewardedView(AppId, activity);
             if (location != null) {
-                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, location);
+                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId, location);
             } else {
-                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor);
+                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId);
             }
         });
     }
