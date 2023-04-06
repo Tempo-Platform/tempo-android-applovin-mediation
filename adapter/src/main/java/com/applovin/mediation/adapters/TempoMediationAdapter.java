@@ -46,12 +46,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return "0.4.12";
+        return "0.4.13";
     }
 
     @Override
     public String getAdapterVersion() {
-        return "0.4.6";
+        return "0.4.7";
     }
 
     @Override
