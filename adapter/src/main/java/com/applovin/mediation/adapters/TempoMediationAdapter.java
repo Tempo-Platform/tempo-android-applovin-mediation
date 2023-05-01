@@ -30,7 +30,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.0";
+    private String dynSdkVersion = "1.0.1";
 
     public MaxInterstitialAdapterListener interstitialListener;
     public MaxRewardedAdapterListener rewardedListener;
@@ -52,7 +52,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getAdapterVersion() {
-        return "1.0.0";
+        return "1.0.1";
     }
 
     @Override
