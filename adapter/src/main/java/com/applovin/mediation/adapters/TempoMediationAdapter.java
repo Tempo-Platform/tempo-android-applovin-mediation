@@ -17,6 +17,7 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
+
 import com.tempoplatform.ads.InterstitialAdListener;
 import com.tempoplatform.ads.InterstitialView;
 import com.tempoplatform.ads.RewardedAdListener;
@@ -109,9 +110,15 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                Log.d(LOG_TAG, "Version exchange triggered");
+                Log.d(LOG_TAG, "Version exchange triggered (I)");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
+            }
+
+            @Override
+            public String onGetAdapterType() {
+                Log.d(LOG_TAG, "Adapter Type requested (I)");
+                return "APPLOVIN";
             }
         };
         activity.runOnUiThread(() -> {
@@ -187,9 +194,15 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                Log.d(LOG_TAG, "Version exchange triggered");
+                Log.d(LOG_TAG, "Version exchange triggered (R)");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
+            }
+
+            @Override
+            public String onGetAdapterType() {
+                Log.d(LOG_TAG, "Adapter Type requested (R)");
+                return "APPLOVIN";
             }
         };
         activity.runOnUiThread(() -> {
