@@ -31,8 +31,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.2";
-    private final String ADAPTER_VERSION = "1.0.4";
+    private String dynSdkVersion = "1.0.3";
+    private final String ADAPTER_VERSION = "1.0.5";
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
@@ -108,14 +108,14 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                Log.d(LOG_TAG, "Version exchange triggered (I)");
+                //Log.d(LOG_TAG, "Version exchange triggered (I)");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
             }
 
             @Override
             public String onGetAdapterType() {
-                Log.d(LOG_TAG, "Adapter Type requested (I)");
+                //Log.d(LOG_TAG, "Adapter Type requested (I)");
                 return ADAPTER_TYPE;
             }
         };
@@ -192,14 +192,14 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                Log.d(LOG_TAG, "Version exchange triggered (R)");
+                //Log.d(LOG_TAG, "Version exchange triggered (R)");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
             }
 
             @Override
             public String onGetAdapterType() {
-                Log.d(LOG_TAG, "Adapter Type requested (R)");
+                //Log.d(LOG_TAG, "Adapter Type requested (R)");
                 return ADAPTER_TYPE;
             }
         };
