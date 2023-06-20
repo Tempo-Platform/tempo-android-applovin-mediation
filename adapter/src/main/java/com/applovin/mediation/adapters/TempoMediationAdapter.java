@@ -31,8 +31,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.3";
-    private final String ADAPTER_VERSION = "1.0.5";
+    private String dynSdkVersion = "1.0.3"; // 1.0.3.1
+    private final String ADAPTER_VERSION = "1.0.5"; // 1.0.5.1
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
@@ -44,7 +44,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void initialize(MaxAdapterInitializationParameters maxAdapterInitializationParameters, Activity activity, final OnCompletionListener onCompletionListener) {
-        Log.d(LOG_TAG, "Initialized Tempo Adapter");
+        Log.d(LOG_TAG, "!Initialized Tempo Adapter");
         Log.d(LOG_TAG, "Params: " + maxAdapterInitializationParameters.getServerParameters());
     }
 
