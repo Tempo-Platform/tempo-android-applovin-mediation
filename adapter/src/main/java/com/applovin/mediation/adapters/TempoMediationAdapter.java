@@ -22,6 +22,7 @@ import com.tempoplatform.ads.InterstitialAdListener;
 import com.tempoplatform.ads.InterstitialView;
 import com.tempoplatform.ads.RewardedAdListener;
 import com.tempoplatform.ads.RewardedView;
+import com.tempoplatform.ads.TempoUtils;
 
 @Keep
 public class TempoMediationAdapter extends MediationAdapterBase implements MaxInterstitialAdapter, MaxRewardedAdapter {
@@ -31,8 +32,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.3"; // 1.0.3.1
-    private final String ADAPTER_VERSION = "1.0.5"; // 1.0.5.1
+    private String dynSdkVersion = "1.0.4";
+    private final String ADAPTER_VERSION = "1.0.6";
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
@@ -44,8 +45,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void initialize(MaxAdapterInitializationParameters maxAdapterInitializationParameters, Activity activity, final OnCompletionListener onCompletionListener) {
-        Log.d(LOG_TAG, "!Initialized Tempo Adapter");
-        Log.d(LOG_TAG, "Params: " + maxAdapterInitializationParameters.getServerParameters());
+        TempoUtils.Say("TempoAdapter: init => " + maxAdapterInitializationParameters.getServerParameters(), true);
     }
 
     @Override
@@ -65,57 +65,53 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void loadInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
-        Log.d(LOG_TAG, "Loading Interstitial Ad, params: " + maxAdapterResponseParameters.getCustomParameters());
+        TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
         maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
-        Log.d(LOG_TAG, "AppId: " + AppId);
         String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
-        Log.d(LOG_TAG, "Location: " + location);
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
-        Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
-        Log.d(LOG_TAG, "placementId: " + placementId);
 
         interstitialListener = maxInterstitialAdapterListener;
         InterstitialAdListener tempoInterstitialListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialAdFetchSucceeded() {
-                Log.d(LOG_TAG, "Interstitial ad fetch succeeded");
+                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchSucceeded",true);
                 interstitialListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
             @Override
             public void onInterstitialAdFetchFailed() {
-                Log.d(LOG_TAG, "Interstitial ad fetch failed");
+                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchFailed",true);
                 interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onInterstitialAdDisplayed() {
-                Log.d(LOG_TAG, "Interstitial ad fetch displayed");
+                TempoUtils.Say("TempoAdapter: onInterstitialAdDisplayed",true);
                 interstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
             public void onInterstitialAdClosed() {
-                Log.d(LOG_TAG, "Interstitial ad closed");
+                TempoUtils.Say("TempoAdapter: onInterstitialAdClosed",true);
                 interstitialListener.onInterstitialAdHidden();
                 interstitialReady = false;
             }
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                //Log.d(LOG_TAG, "Version exchange triggered (I)");
+                TempoUtils.Say("TempoAdapter: onVersionExchange (Interstitial, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
             }
 
             @Override
             public String onGetAdapterType() {
-                //Log.d(LOG_TAG, "Adapter Type requested (I)");
+                TempoUtils.Say("TempoAdapter: onGetAdapterType (Interstitial, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
             }
         };
@@ -131,7 +127,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void showInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
-        Log.d(LOG_TAG, "showInterstitial");
+        TempoUtils.Say("TempoAdapter: showInterstitialAd", true);
         if (interstitialReady) {
             interstitialView.showAd();
         }
@@ -139,41 +135,37 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void loadRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
-        Log.d(LOG_TAG, "Loading Rewarded Ad, params: " + maxAdapterResponseParameters.getCustomParameters());
+        TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
-        Log.d(LOG_TAG, "AppId: " + AppId);
         String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
-        Log.d(LOG_TAG, "Location: " + location);
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
-        Log.d(LOG_TAG, "cpmFloor: " + (cpmFloorStr != null ? cpmFloorStr : "0.0"));
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
-        Log.d(LOG_TAG, "placementId: " + placementId);
 
         rewardedListener = maxRewardedAdapterListener;
         RewardedAdListener tempoRewardedListener = new RewardedAdListener() {
             @Override
             public void onRewardedAdFetchSucceeded() {
-                Log.d(LOG_TAG, "Rewarded ad fetch succeeded");
+                TempoUtils.Say("TempoAdapter: onRewardedAdFetchSucceeded",true);
                 rewardedListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
             @Override
             public void onRewardedAdFetchFailed() {
-                Log.d(LOG_TAG, "Rewarded ad fetch failed");
+                TempoUtils.Say("TempoAdapter: onRewardedAdFetchFailed",true);
                 rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onRewardedAdDisplayed() {
-                Log.d(LOG_TAG, "Rewarded ad fetch displayed");
+                TempoUtils.Say("TempoAdapter: onRewardedAdDisplayed",true);
                 rewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
             public void onRewardedAdClosed() {
-                Log.d(LOG_TAG, "Rewarded ad Max reward set");
+                TempoUtils.Say("TempoAdapter: MaxReward set",true);
                 rewardedListener.onUserRewarded(new MaxReward() {
                     @Override
                     public String getLabel() {
@@ -185,21 +177,21 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                         return MaxReward.DEFAULT_AMOUNT;
                     }
                 });
-                Log.d(LOG_TAG, "Rewarded ad closed");
+                TempoUtils.Say("TempoAdapter: onRewardedAdClosed",true);
                 rewardedListener.onRewardedAdHidden();
                 rewardedReady = false;
             }
 
             @Override
             public String onVersionExchange(String sdkVersion) {
-                //Log.d(LOG_TAG, "Version exchange triggered (R)");
+                TempoUtils.Say("TempoAdapter: onVersionExchange (Rewarded, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
                 dynSdkVersion = sdkVersion;
                 return getAdapterVersion();
             }
 
             @Override
             public String onGetAdapterType() {
-                //Log.d(LOG_TAG, "Adapter Type requested (R)");
+                TempoUtils.Say("TempoAdapter: onGetAdapterType (Rewarded, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
             }
         };
@@ -215,7 +207,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void showRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
-        Log.d(LOG_TAG, "showRewarded");
+        TempoUtils.Say("TempoAdapter: showRewardedAd", true);
         if (rewardedReady) {
             rewardedView.showAd();
         }
