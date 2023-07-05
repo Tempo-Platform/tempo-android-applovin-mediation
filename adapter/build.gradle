@@ -22,21 +22,29 @@ android {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId = 'com.github.tempo-platform'
-                artifactId = 'adapter'
-                version = '1.0.4'
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            release(MavenPublication) {
+//                from components.release
+//                groupId = 'com.github.tempo-platform'
+//                artifactId = 'adapter'
+//                version = '1.0.6.1'
+//            }
+//        }
+//    }
+//}
 
 dependencies {
     api 'com.applovin:applovin-sdk:[11.2,11.6)'
-    api 'com.github.Tempo-Platform:tempo-android-sdk-release:1.0.4'
+    implementation 'io.github.tempo-platform:tempo-android-sdk:1.0.4.1'
     //implementation(name:'tempo-android-sdk-release', ext:'aar')
 }
+
+ext {
+    PUBLISH_GROUP_ID = 'io.github.tempo-platform'
+    PUBLISH_VERSION = '1.0.6.1'
+    PUBLISH_ARTIFACT_ID = 'tempo-android-applovin-adapter'
+}
+
+apply from: 'publish-remote.gradle'

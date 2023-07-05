@@ -1,0 +1,60 @@
+
+// Create variables with empty default values
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.key"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+ext["sonatypeStagingProfileId"] = ''
+
+/** Now that we’ve created the properties with empty values, it’s time to assign the data.
+ * We can do this in two ways:
+ *   1. We can store them in local.properties and extract them,
+ *   2/ We can get them from environment variables.  */
+
+
+System.out.println("\n------------ publish-root.gradle  -----------");
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    System.out.println("--> secretPropsFile exists")
+    // Read local.properties file first if it exists
+    Properties p = new Properties()
+    new FileInputStream(secretPropsFile).withCloseable { is -> p.load(is) }
+    p.each { name, value -> ext[name] = value;
+        // System.out.println(name + ": " + value)
+    }
+
+} else {
+    System.out.println("--> secretPropsFile DOES NOT exist (Use system environment variables)")
+    // Use system environment variables
+    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext["sonatypeStagingProfileId"] = System.getenv('SONATYPE_STAGING_PROFILE_ID')
+    ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.key"] = System.getenv('SIGNING_KEY')
+}
+
+System.out.println("\n------------ from local.properites: -----------");
+System.out.println("ossrhUsername\t\t\t\t: " + ext["ossrhUsername"])
+System.out.println("ossrhPassword\t\t\t\t: " + ext["ossrhPassword"])
+System.out.println("sonatypeStagingProfileId\t: " + ext["sonatypeStagingProfileId"])
+System.out.println("signing.key\t\t\t\t\t: " + ext["signing.key"])
+System.out.println("signing.keyId\t\t\t\t: " + ext["signing.keyId"])
+System.out.println("signing.password\t\t\t: " + ext["signing.password"])
+System.out.println("ossrhUsername (plain)\t\t: " + ossrhUsername)
+System.out.println("ossrhPassword (plain)\t\t: " + ossrhPassword)
+
+// Set up Sonatype repository
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = sonatypeStagingProfileId
+            username = ossrhUsername
+            password = ossrhPassword
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
