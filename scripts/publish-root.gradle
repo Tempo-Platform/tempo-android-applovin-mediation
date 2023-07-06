@@ -7,27 +7,23 @@ ext["ossrhUsername"] = ''
 ext["ossrhPassword"] = ''
 ext["sonatypeStagingProfileId"] = ''
 
-/** Now that we’ve created the properties with empty values, it’s time to assign the data.
- * We can do this in two ways:
- *   1. We can store them in local.properties and extract them,
- *   2/ We can get them from environment variables.  */
 
-
-System.out.println("\n------------ publish-root.gradle  -----------");
-
+// Search local.properties for secret data TODO: Retrieve this from cloud?
 File secretPropsFile = project.rootProject.file('local.properties')
+
+// We can store properties values in local.properties and extract them
 if (secretPropsFile.exists()) {
-    System.out.println("--> secretPropsFile exists")
+    System.out.println("--> publish-root.gradle: secretPropsFile exists")
     // Read local.properties file first if it exists
     Properties p = new Properties()
     new FileInputStream(secretPropsFile).withCloseable { is -> p.load(is) }
     p.each { name, value -> ext[name] = value;
-        // System.out.println(name + ": " + value)
+        //System.out.println("ext[" + name + "] : " + value)
     }
-
-} else {
-    System.out.println("--> secretPropsFile DOES NOT exist (Use system environment variables)")
-    // Use system environment variables
+}
+// OR We can get properties values from system environment variables TODO: Delete? System environment variables probably will not be used
+else {
+    System.out.println("--> publish-root.gradle: secretPropsFile DOES NOT exist (Use system environment variables)")
     ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
     ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
     ext["sonatypeStagingProfileId"] = System.getenv('SONATYPE_STAGING_PROFILE_ID')
@@ -36,25 +32,33 @@ if (secretPropsFile.exists()) {
     ext["signing.key"] = System.getenv('SIGNING_KEY')
 }
 
-System.out.println("\n------------ from local.properites: -----------");
-System.out.println("ossrhUsername\t\t\t\t: " + ext["ossrhUsername"])
-System.out.println("ossrhPassword\t\t\t\t: " + ext["ossrhPassword"])
-System.out.println("sonatypeStagingProfileId\t: " + ext["sonatypeStagingProfileId"])
-System.out.println("signing.key\t\t\t\t\t: " + ext["signing.key"])
-System.out.println("signing.keyId\t\t\t\t: " + ext["signing.keyId"])
-System.out.println("signing.password\t\t\t: " + ext["signing.password"])
-System.out.println("ossrhUsername (plain)\t\t: " + ossrhUsername)
-System.out.println("ossrhPassword (plain)\t\t: " + ossrhPassword)
+//System.out.println("\n\nossrhUsername\t\t\t\t: " + ext["ossrhUsername"] +
+//        "\nossrhPassword\t\t\t\t: " + ext["ossrhPassword"] +
+//        "\nsonatypeStagingProfileId\t: " + ext["sonatypeStagingProfileId"] +
+//        "\nsigning.key\t\t\t\t\t: " + ext["signing.key"] +
+//        "\nsigning.keyId\t\t\t\t: " + ext["signing.keyId"] +
+//        "\nsigning.password\t\t\t: " + ext["signing.password"])
 
-// Set up Sonatype repository
-nexusPublishing {
-    repositories {
-        sonatype {
-            stagingProfileId = sonatypeStagingProfileId
-            username = ossrhUsername
-            password = ossrhPassword
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+if(ext["ossrhUsername"] != null && ext["ossrhPassword"] != null)
+{
+    // Set up Sonatype repository
+    nexusPublishing {
+        repositories {
+            sonatype {
+                stagingProfileId = sonatypeStagingProfileId
+                username = ossrhUsername
+                password = ossrhPassword
+                nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+                snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            }
         }
     }
+} else {
+    // Cannot set up Sonatype repository without credentials
+    System.out.println("\nStopping build: null values found:" +
+            "\nossrhUsername\t\t\t\t: " + ext["ossrhUsername"] +
+            "\nossrhPassword\t\t\t\t: " + ext["ossrhPassword"]);
 }
+
+
+

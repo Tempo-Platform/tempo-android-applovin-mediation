@@ -16,9 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tempo AppLovin Mediation Adapter"
 include ':adapter'
-
-//rootProject.name = "AppLovin - Tempo"
-//
-//include ':adapter'
-//// UNCOMMENT BELOW FOR TESTING
-//// include ':example'
