@@ -32,12 +32,16 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.4";
-    private final String ADAPTER_VERSION = "1.0.6";
+    private String dynSdkVersion = "1.0.8";
+    private final String ADAPTER_VERSION = "1.0.9"; // Current 1.0.9
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
     public MaxRewardedAdapterListener rewardedListener;
+
+    private Boolean hasUserConsent;
+    private Boolean isDoNotSell;
+    private Boolean isAgeRestrictedUser;
 
     public TempoMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
@@ -66,7 +70,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     @Override
     public void loadInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
         TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
-        maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+
+        // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
+        hasUserConsent = maxAdapterResponseParameters.hasUserConsent();
+        isDoNotSell = maxAdapterResponseParameters.isDoNotSell();
+        isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
         String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
@@ -114,6 +123,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                 TempoUtils.Say("TempoAdapter: onGetAdapterType (Interstitial, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
             }
+
+            @Override
+            public Boolean hasUserConsent() {
+                TempoUtils.Say("TempoAdapter: hasUserConsent (Interstitial, " + hasUserConsent + ")");
+                return hasUserConsent;
+            }
         };
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
@@ -136,6 +151,13 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     @Override
     public void loadRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
         TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
+
+        // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
+        hasUserConsent = maxAdapterResponseParameters.hasUserConsent();
+        isDoNotSell = maxAdapterResponseParameters.isDoNotSell();
+        isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
+
         String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
         String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
         String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
@@ -193,6 +215,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             public String onGetAdapterType() {
                 TempoUtils.Say("TempoAdapter: onGetAdapterType (Rewarded, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
+            }
+
+            @Override
+            public Boolean hasUserConsent() {
+                TempoUtils.Say("TempoAdapter: hasUserConsent (Rewarded, " + hasUserConsent + ")");
+                return hasUserConsent;
             }
         };
         activity.runOnUiThread(() -> {
