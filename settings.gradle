@@ -1,4 +1,22 @@
-rootProject.name = "AppLovin - Tempo"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
 
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        flatDir {
+            dirs 'adapter/libs'
+        }
+    }
+}
+
+rootProject.name = "Tempo AppLovin Adapter"
 include ':adapter'
-include ':example'

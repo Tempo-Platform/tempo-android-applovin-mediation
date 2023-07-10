@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'maven-publish'
-    id 'signing'
 }
 
 android {
@@ -9,8 +8,8 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 24
+        targetSdk 33
     }
 
     defaultConfig {
@@ -22,78 +21,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
-File secretPropsFile = project.rootProject.file('local.properties')
-if (secretPropsFile.exists()) {
-    // Read local.properties file first if it exists
-    Properties p = new Properties()
-    new FileInputStream(secretPropsFile).withCloseable { is -> p.load(is) }
-    p.each { name, value -> ext[name] = value }
-} else {
-    // Use system environment variables
-    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
-    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
-}
-
-signing {
-    useGpgCmd()
-    sign publishing.publications
-}
-
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId = 'io.github.tempo-platform'
-                artifactId = 'tempo-applovin-mediation'
-                version = '0.0.11'
-                pom {
-                    name = 'Tempo Android AppLovin Adapter'
-                    description = 'The Tempo Android AppLovin Mediation Adapter.'
-                    url = 'https://github.com/Tempo-Platform/tempo-android-applovin-mediation'
-                    properties = [
-                            myProp          : "value",
-                            "prop.with.dots": "anotherValue"
-                    ]
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'kmcgowan2000'
-                            name = 'Kieran McGowan'
-                            email = 'kieran@tempoplatform.com'
-                        }
-                    }
-                    scm {
-                        connection = 'scm:git:git://github.com/Tempo-Platform/tempo-android-applovin-mediation.git'
-                        developerConnection = 'scm:git:ssh://github.com/Tempo-Platform/tempo-android-applovin-mediation.git'
-                        url = 'http://example.com/my-library/'
-                    }
-                }
-            }
-        }
-        repositories {
-            maven {
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-                // change URLs to point to your repos, e.g. http://my.org/repo
-                def releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                def snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            }
-        }
-    }
-}
-
 dependencies {
-    implementation 'com.applovin:applovin-sdk:[11.2,11.6)'
-    implementation 'io.github.tempo-platform:tempo-android-sdk:0.0.16'
+    api 'com.applovin:applovin-sdk:[11.2,11.6)'
+    implementation 'io.github.tempo-platform:tempo-android-sdk:1.0.8';
+    //implementation(name:'tempo-android-sdk-release', ext:'aar')
 }
+
+
+apply from: 'publish-remote.gradle'
