@@ -32,8 +32,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.0.8";
-    private final String ADAPTER_VERSION = "1.0.9"; // Current 1.0.9
+    private String dynSdkVersion = "1.1.0";
+    private final String ADAPTER_VERSION = "1.1.0"; // Current 1.1.0
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
