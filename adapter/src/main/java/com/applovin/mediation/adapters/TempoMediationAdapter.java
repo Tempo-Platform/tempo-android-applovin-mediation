@@ -1,7 +1,6 @@
 package com.applovin.mediation.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.Keep;
@@ -18,10 +17,9 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 
-import com.tempoplatform.ads.InterstitialAdListener;
 import com.tempoplatform.ads.InterstitialView;
-import com.tempoplatform.ads.RewardedAdListener;
 import com.tempoplatform.ads.RewardedView;
+import com.tempoplatform.ads.TempoAdListener;
 import com.tempoplatform.ads.TempoUtils;
 
 @Keep
@@ -84,28 +82,28 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
         interstitialListener = maxInterstitialAdapterListener;
-        InterstitialAdListener tempoInterstitialListener = new InterstitialAdListener() {
+        TempoAdListener tempoInterstitialListener = new TempoAdListener() {
             @Override
-            public void onInterstitialAdFetchSucceeded() {
+            public void onTempoAdFetchSucceeded() {
                 TempoUtils.Say("TempoAdapter: onInterstitialAdFetchSucceeded",true);
                 interstitialListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
             @Override
-            public void onInterstitialAdFetchFailed() {
+            public void onTempoAdFetchFailed() {
                 TempoUtils.Say("TempoAdapter: onInterstitialAdFetchFailed",true);
                 interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
-            public void onInterstitialAdDisplayed() {
+            public void onTempoAdDisplayed() {
                 TempoUtils.Say("TempoAdapter: onInterstitialAdDisplayed",true);
                 interstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
-            public void onInterstitialAdClosed() {
+            public void onTempoAdClosed() {
                 TempoUtils.Say("TempoAdapter: onInterstitialAdClosed",true);
                 interstitialListener.onInterstitialAdHidden();
                 interstitialReady = false;
@@ -165,28 +163,28 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
         rewardedListener = maxRewardedAdapterListener;
-        RewardedAdListener tempoRewardedListener = new RewardedAdListener() {
+        TempoAdListener tempoRewardedListener = new TempoAdListener() {
             @Override
-            public void onRewardedAdFetchSucceeded() {
+            public void onTempoAdFetchSucceeded() {
                 TempoUtils.Say("TempoAdapter: onRewardedAdFetchSucceeded",true);
                 rewardedListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
             @Override
-            public void onRewardedAdFetchFailed() {
+            public void onTempoAdFetchFailed() {
                 TempoUtils.Say("TempoAdapter: onRewardedAdFetchFailed",true);
                 rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
-            public void onRewardedAdDisplayed() {
+            public void onTempoAdDisplayed() {
                 TempoUtils.Say("TempoAdapter: onRewardedAdDisplayed",true);
                 rewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
-            public void onRewardedAdClosed() {
+            public void onTempoAdClosed() {
                 TempoUtils.Say("TempoAdapter: MaxReward set",true);
                 rewardedListener.onUserRewarded(new MaxReward() {
                     @Override
