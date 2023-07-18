@@ -17,6 +17,7 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 
+import com.tempoplatform.ads.Constants;
 import com.tempoplatform.ads.InterstitialView;
 import com.tempoplatform.ads.RewardedView;
 import com.tempoplatform.ads.TempoAdListener;
@@ -30,9 +31,6 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.1.0";
-    private final String ADAPTER_VERSION = "1.1.0"; // Current 1.1.0
-    private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
     public MaxRewardedAdapterListener rewardedListener;
@@ -52,12 +50,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return dynSdkVersion;
+        return Constants.SDK_VERSION;
     }
 
     @Override
     public String getAdapterVersion() {
-        return ADAPTER_VERSION;
+        return AdapterConstants.ADAPTER_VERSION;
     }
 
     @Override
@@ -75,9 +73,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
-        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
-        String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
-        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
+        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
+        String location = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_GEO);
+        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
@@ -110,16 +108,15 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
 
             @Override
-            public String onVersionExchange(String sdkVersion) {
-                TempoUtils.Say("TempoAdapter: onVersionExchange (Interstitial, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
-                dynSdkVersion = sdkVersion;
+            public String getTempoAdapterVersion() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (Rewarded, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
                 return getAdapterVersion();
             }
 
             @Override
-            public String onGetAdapterType() {
-                TempoUtils.Say("TempoAdapter: onGetAdapterType (Interstitial, Type: " + ADAPTER_TYPE + ")");
-                return ADAPTER_TYPE;
+            public String getTempoAdapterType() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterType (Rewarded, Type: " + AdapterConstants.ADAPTER_TYPE + ")");
+                return AdapterConstants.ADAPTER_TYPE;
             }
 
             @Override
@@ -156,9 +153,9 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
-        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get("app_id");
-        String location = (String) maxAdapterResponseParameters.getCustomParameters().get("geo");
-        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get("cpm_floor");
+        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
+        String location = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_GEO);
+        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
@@ -203,16 +200,15 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
 
             @Override
-            public String onVersionExchange(String sdkVersion) {
-                TempoUtils.Say("TempoAdapter: onVersionExchange (Rewarded, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
-                dynSdkVersion = sdkVersion;
+            public String getTempoAdapterVersion() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (Rewarded, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
                 return getAdapterVersion();
             }
 
             @Override
-            public String onGetAdapterType() {
-                TempoUtils.Say("TempoAdapter: onGetAdapterType (Rewarded, Type: " + ADAPTER_TYPE + ")");
-                return ADAPTER_TYPE;
+            public String getTempoAdapterType() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterType (Rewarded, Type: " + AdapterConstants.ADAPTER_TYPE + ")");
+                return AdapterConstants.ADAPTER_TYPE ;
             }
 
             @Override
