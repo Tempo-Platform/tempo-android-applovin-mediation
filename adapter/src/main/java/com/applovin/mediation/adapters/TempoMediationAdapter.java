@@ -12,9 +12,7 @@ import com.applovin.mediation.adapter.MaxRewardedAdapter;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParameters;
-import com.applovin.mediation.adapter.parameters.MaxAdapterParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
-import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 
 import com.tempoplatform.ads.Constants;
@@ -44,8 +42,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     }
 
     @Override
-    public void initialize(MaxAdapterInitializationParameters maxAdapterInitializationParameters, Activity activity, final OnCompletionListener onCompletionListener) {
-        TempoUtils.Say("TempoAdapter: init => " + maxAdapterInitializationParameters.getServerParameters(), true);
+    public void initialize(MaxAdapterInitializationParameters maxInitParams, Activity activity, final OnCompletionListener onCompletionListener) {
+        TempoUtils.Say("TempoAdapter: init => " + maxInitParams.getServerParameters());
     }
 
     @Override
@@ -64,45 +62,45 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     }
 
     @Override
-    public void loadInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
-        TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
+    public void loadInterstitialAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxInterstitialAdapterListener maxIntListener) {
+        TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxResponseParams.getCustomParameters());
 
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
-        hasUserConsent = maxAdapterResponseParameters.hasUserConsent();
-        isDoNotSell = maxAdapterResponseParameters.isDoNotSell();
-        isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
+        hasUserConsent = maxResponseParams.hasUserConsent();
+        isDoNotSell = maxResponseParams.isDoNotSell();
+        isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
-        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String location = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_GEO);
-        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
+        String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
+        String location = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_GEO);
+        String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
-        String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+        String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
-        interstitialListener = maxInterstitialAdapterListener;
+        interstitialListener = maxIntListener;
         TempoAdListener tempoInterstitialListener = new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchSucceeded",true);
+                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchSucceeded");
                 interstitialListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
             @Override
             public void onTempoAdFetchFailed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchFailed",true);
+                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchFailed");
                 interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdDisplayed",true);
+                TempoUtils.Say("TempoAdapter: onInterstitialAdDisplayed");
                 interstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
             public void onTempoAdClosed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdClosed",true);
+                TempoUtils.Say("TempoAdapter: onInterstitialAdClosed");
                 interstitialListener.onInterstitialAdHidden();
                 interstitialReady = false;
             }
@@ -136,53 +134,53 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     }
 
     @Override
-    public void showInterstitialAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxInterstitialAdapterListener maxInterstitialAdapterListener) {
-        TempoUtils.Say("TempoAdapter: showInterstitialAd", true);
+    public void showInterstitialAd(MaxAdapterResponseParameters maxResponseParams, Activity activity, MaxInterstitialAdapterListener maxIntListener) {
+        TempoUtils.Say("TempoAdapter: showInterstitialAd");
         if (interstitialReady) {
             interstitialView.showAd();
         }
     }
 
     @Override
-    public void loadRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, final Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
-        TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxAdapterResponseParameters.getCustomParameters(), true);
+    public void loadRewardedAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxRewardedAdapterListener maxRewListener) {
+        TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxResponseParams.getCustomParameters());
 
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
-        hasUserConsent = maxAdapterResponseParameters.hasUserConsent();
-        isDoNotSell = maxAdapterResponseParameters.isDoNotSell();
-        isAgeRestrictedUser = maxAdapterResponseParameters.isAgeRestrictedUser();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
+        hasUserConsent = maxResponseParams.hasUserConsent();
+        isDoNotSell = maxResponseParams.isDoNotSell();
+        isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser);
 
-        String AppId = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String location = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_GEO);
-        String cpmFloorStr = (String) maxAdapterResponseParameters.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
+        String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
+        String location = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_GEO);
+        String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
-        String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+        String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
-        rewardedListener = maxRewardedAdapterListener;
+        rewardedListener = maxRewListener;
         TempoAdListener tempoRewardedListener = new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdFetchSucceeded",true);
+                TempoUtils.Say("TempoAdapter: onRewardedAdFetchSucceeded");
                 rewardedListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
             @Override
             public void onTempoAdFetchFailed() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdFetchFailed",true);
+                TempoUtils.Say("TempoAdapter: onRewardedAdFetchFailed");
                 rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdDisplayed",true);
+                TempoUtils.Say("TempoAdapter: onRewardedAdDisplayed");
                 rewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
             public void onTempoAdClosed() {
-                TempoUtils.Say("TempoAdapter: MaxReward set",true);
+                TempoUtils.Say("TempoAdapter: MaxReward set");
                 rewardedListener.onUserRewarded(new MaxReward() {
                     @Override
                     public String getLabel() {
@@ -194,7 +192,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                         return MaxReward.DEFAULT_AMOUNT;
                     }
                 });
-                TempoUtils.Say("TempoAdapter: onRewardedAdClosed",true);
+                TempoUtils.Say("TempoAdapter: onRewardedAdClosed");
                 rewardedListener.onRewardedAdHidden();
                 rewardedReady = false;
             }
@@ -228,8 +226,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     }
 
     @Override
-    public void showRewardedAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxRewardedAdapterListener maxRewardedAdapterListener) {
-        TempoUtils.Say("TempoAdapter: showRewardedAd", true);
+    public void showRewardedAd(MaxAdapterResponseParameters maxResponseParams, Activity activity, MaxRewardedAdapterListener maxRewListener) {
+        TempoUtils.Say("TempoAdapter: showRewardedAd");
         if (rewardedReady) {
             rewardedView.showAd();
         }
