@@ -30,11 +30,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private boolean interstitialReady;
     private boolean rewardedReady;
 
-    private final String ADAPTER_VERSION = "1.2.0";
-    private final String ADAPTER_TYPE = "APPLOVIN";
-
-    public MaxInterstitialAdapterListener interstitialListener;
-    public MaxRewardedAdapterListener rewardedListener;
+    public MaxInterstitialAdapterListener maxInterstitialListener;
+    public MaxRewardedAdapterListener maxRewardedListener;
 
     private Boolean hasUserConsent;
     private Boolean isDoNotSell;
@@ -81,13 +78,13 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
 
-        interstitialListener = maxIntListener;
+        maxInterstitialListener = maxIntListener;
         TempoAdListener tempoInterstitialListener = new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
                 TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (I)",true);
 
-                interstitialListener.onInterstitialAdLoaded();
+                maxInterstitialListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
@@ -96,7 +93,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (I)",true);
 
-                interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
+                maxInterstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
@@ -104,7 +101,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (I)",true);
 
-                interstitialListener.onInterstitialAdDisplayed();
+                maxInterstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
@@ -112,7 +109,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdClosed (I)",true);
 
-                interstitialListener.onInterstitialAdHidden();
+                maxInterstitialListener.onInterstitialAdHidden();
                 interstitialReady = false;
             }
 
@@ -127,8 +124,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             @Override
             public String getTempoAdapterType() {
 
-                TempoUtils.Say("TempoAdapter: getTempoAdapterType (I, Type: " + ADAPTER_TYPE + ")");
-                return ADAPTER_TYPE;
+                TempoUtils.Say("TempoAdapter: getTempoAdapterType (I, Type: " + AdapterConstants.ADAPTER_TYPE + ")");
+                return AdapterConstants.ADAPTER_TYPE;
 
             }
 
@@ -173,13 +170,13 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
 
-        rewardedListener = maxRewListener;
+        maxRewardedListener = maxRewListener;
         TempoAdListener tempoRewardedListener = new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
                 TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (R)",true);
 
-                rewardedListener.onRewardedAdLoaded();
+                maxRewardedListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
@@ -188,7 +185,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (R)",true);
 
-                rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
+                maxRewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
@@ -196,7 +193,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (R)",true);
 
-                rewardedListener.onRewardedAdDisplayed();
+                maxRewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
@@ -204,7 +201,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: MaxReward set",true);
 
-                rewardedListener.onUserRewarded(new MaxReward() {
+                maxRewardedListener.onUserRewarded(new MaxReward() {
                     @Override
                     public String getLabel() {
                         return "TempoReward";
@@ -217,7 +214,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                 });
 
                 TempoUtils.Say("TempoAdapter: onTempoAdClosed (R)",true);
-                rewardedListener.onRewardedAdHidden();
+                maxRewardedListener.onRewardedAdHidden();
                 rewardedReady = false;
             }
 
