@@ -18,10 +18,10 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 
-import com.tempoplatform.ads.InterstitialAdListener;
+import com.tempoplatform.ads.Constants;
 import com.tempoplatform.ads.InterstitialView;
-import com.tempoplatform.ads.RewardedAdListener;
 import com.tempoplatform.ads.RewardedView;
+import com.tempoplatform.ads.TempoAdListener;
 import com.tempoplatform.ads.TempoUtils;
 
 @Keep
@@ -32,8 +32,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private RewardedView rewardedView;
     private boolean interstitialReady;
     private boolean rewardedReady;
-    private String dynSdkVersion = "1.1.0";
-    private final String ADAPTER_VERSION = "1.1.0"; // Current 1.1.0
+    private final String ADAPTER_VERSION = "1.2.0";
     private final String ADAPTER_TYPE = "APPLOVIN";
 
     public MaxInterstitialAdapterListener interstitialListener;
@@ -54,7 +53,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public String getSdkVersion() {
-        return dynSdkVersion;
+        return Constants.SDK_VERSION;
     }
 
     @Override
@@ -84,49 +83,48 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
         interstitialListener = maxInterstitialAdapterListener;
-        InterstitialAdListener tempoInterstitialListener = new InterstitialAdListener() {
+        TempoAdListener tempoInterstitialListener = new TempoAdListener() {
             @Override
-            public void onInterstitialAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchSucceeded",true);
+            public void onTempoAdFetchSucceeded() {
+                TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (I)",true);
                 interstitialListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
             @Override
-            public void onInterstitialAdFetchFailed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdFetchFailed",true);
+            public void onTempoAdFetchFailed() {
+                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (I)",true);
                 interstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
-            public void onInterstitialAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdDisplayed",true);
+            public void onTempoAdDisplayed() {
+                TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (I)",true);
                 interstitialListener.onInterstitialAdDisplayed();
             }
 
             @Override
-            public void onInterstitialAdClosed() {
-                TempoUtils.Say("TempoAdapter: onInterstitialAdClosed",true);
+            public void onTempoAdClosed() {
+                TempoUtils.Say("TempoAdapter: onTempoAdClosed (I)",true);
                 interstitialListener.onInterstitialAdHidden();
                 interstitialReady = false;
             }
 
             @Override
-            public String onVersionExchange(String sdkVersion) {
-                TempoUtils.Say("TempoAdapter: onVersionExchange (Interstitial, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
-                dynSdkVersion = sdkVersion;
+            public String getTempoAdapterVersion() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (I, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
                 return getAdapterVersion();
             }
 
             @Override
-            public String onGetAdapterType() {
-                TempoUtils.Say("TempoAdapter: onGetAdapterType (Interstitial, Type: " + ADAPTER_TYPE + ")");
+            public String getTempoAdapterType() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterType (I, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
             }
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (Interstitial, " + hasUserConsent + ")");
+                TempoUtils.Say("TempoAdapter: hasUserConsent (I, " + hasUserConsent + ")");
                 return hasUserConsent;
             }
         };
@@ -165,28 +163,28 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
         rewardedListener = maxRewardedAdapterListener;
-        RewardedAdListener tempoRewardedListener = new RewardedAdListener() {
+        TempoAdListener tempoRewardedListener = new TempoAdListener() {
             @Override
-            public void onRewardedAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdFetchSucceeded",true);
+            public void onTempoAdFetchSucceeded() {
+                TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (R)",true);
                 rewardedListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
             @Override
-            public void onRewardedAdFetchFailed() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdFetchFailed",true);
+            public void onTempoAdFetchFailed() {
+                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (R)",true);
                 rewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
-            public void onRewardedAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onRewardedAdDisplayed",true);
+            public void onTempoAdDisplayed() {
+                TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (R)",true);
                 rewardedListener.onRewardedAdDisplayed();
             }
 
             @Override
-            public void onRewardedAdClosed() {
+            public void onTempoAdClosed() {
                 TempoUtils.Say("TempoAdapter: MaxReward set",true);
                 rewardedListener.onUserRewarded(new MaxReward() {
                     @Override
@@ -199,30 +197,30 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                         return MaxReward.DEFAULT_AMOUNT;
                     }
                 });
-                TempoUtils.Say("TempoAdapter: onRewardedAdClosed",true);
+                TempoUtils.Say("TempoAdapter: onTempoAdClosed (R)",true);
                 rewardedListener.onRewardedAdHidden();
                 rewardedReady = false;
             }
 
             @Override
-            public String onVersionExchange(String sdkVersion) {
-                TempoUtils.Say("TempoAdapter: onVersionExchange (Rewarded, SDK=" + sdkVersion + ", Adapter=" + getAdapterVersion() + ")");
-                dynSdkVersion = sdkVersion;
+            public String getTempoAdapterVersion() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (R, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
                 return getAdapterVersion();
             }
 
             @Override
-            public String onGetAdapterType() {
-                TempoUtils.Say("TempoAdapter: onGetAdapterType (Rewarded, Type: " + ADAPTER_TYPE + ")");
+            public String getTempoAdapterType() {
+                TempoUtils.Say("TempoAdapter: getTempoAdapterType (R, Type: " + ADAPTER_TYPE + ")");
                 return ADAPTER_TYPE;
             }
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (Rewarded, " + hasUserConsent + ")");
+                TempoUtils.Say("TempoAdapter: hasUserConsent (R, " + hasUserConsent + ")");
                 return hasUserConsent;
             }
         };
+
         activity.runOnUiThread(() -> {
             rewardedView = new RewardedView(AppId, activity);
             if (location != null) {
