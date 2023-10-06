@@ -89,7 +89,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
 
             @Override
-            public void onTempoAdFetchFailed() {
+            public void onTempoAdFetchFailed(String reason) {
 
                 TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (I)",true);
 
@@ -102,6 +102,14 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                 TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (I)",true);
 
                 maxInterstitialListener.onInterstitialAdDisplayed();
+            }
+
+            @Override
+            public void onTempoAdShowFailed(String reason) {
+
+                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (I=[" + reason + "])", true);
+
+                maxInterstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
@@ -181,16 +189,21 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
 
             @Override
-            public void onTempoAdFetchFailed() {
-
-                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (R)",true);
+            public void onTempoAdFetchFailed(String reason) {
+                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (R=[" + reason + "])) ", true);
 
                 maxRewardedListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
-            public void onTempoAdDisplayed() {
+            public void onTempoAdShowFailed(String reason) {
+                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (R=[" + reason + "]) ", true);
 
+                maxRewardedListener.onRewardedAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
+            }
+
+            @Override
+            public void onTempoAdDisplayed() {
                 TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (R)",true);
 
                 maxRewardedListener.onRewardedAdDisplayed();
@@ -198,7 +211,6 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public void onTempoAdClosed() {
-
                 TempoUtils.Say("TempoAdapter: MaxReward set",true);
 
                 maxRewardedListener.onUserRewarded(new MaxReward() {
