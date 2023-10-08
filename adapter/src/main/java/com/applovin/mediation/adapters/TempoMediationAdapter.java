@@ -109,7 +109,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
                 TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (I=[" + reason + "])", true);
 
-                maxInterstitialListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
+                maxInterstitialListener.onInterstitialAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
