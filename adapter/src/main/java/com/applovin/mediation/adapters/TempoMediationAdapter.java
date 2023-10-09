@@ -77,7 +77,6 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
-
         maxInterstitialListener = maxIntListener;
         TempoAdListener tempoInterstitialListener = new TempoAdListener() {
             @Override
@@ -196,17 +195,17 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
 
             @Override
-            public void onTempoAdShowFailed(String reason) {
-                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (R=[" + reason + "]) ", true);
-
-                maxRewardedListener.onRewardedAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
-            }
-
-            @Override
             public void onTempoAdDisplayed() {
                 TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (R)",true);
 
                 maxRewardedListener.onRewardedAdDisplayed();
+            }
+
+            @Override
+            public void onTempoAdShowFailed(String reason) {
+                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (R=[" + reason + "]) ", true);
+
+                maxRewardedListener.onRewardedAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
