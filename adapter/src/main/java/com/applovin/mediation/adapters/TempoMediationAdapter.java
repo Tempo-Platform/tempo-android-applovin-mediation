@@ -72,7 +72,6 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
         String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String location = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_GEO);
         String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
@@ -144,11 +143,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         };
         activity.runOnUiThread(() -> {
             interstitialView = new InterstitialView(AppId, activity);
-            if (location != null) {
-                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId, location);
-            } else {
-                interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId);
-            }
+            interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId);
         });
     }
 
@@ -171,7 +166,6 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser);
 
         String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String location = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_GEO);
         String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
         Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
@@ -252,11 +246,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
         activity.runOnUiThread(() -> {
             rewardedView = new RewardedView(AppId, activity);
-            if (location != null) {
-                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId, location);
-            } else {
-                rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId);
-            }
+            rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId);
         });
     }
 
