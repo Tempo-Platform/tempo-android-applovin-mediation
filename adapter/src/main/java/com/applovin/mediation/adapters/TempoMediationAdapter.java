@@ -1,6 +1,7 @@
 package com.applovin.mediation.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Keep;
@@ -71,10 +72,24 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
 
-        String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
-        Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
+        String appId = null;
+        Float cpmFloor = 0.0f;
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
+
+        // Handle bad/null data from AppLovin
+        Bundle customParametersBundle = maxResponseParams.getCustomParameters();
+        if(customParametersBundle != null)
+        {
+            appId = (String) customParametersBundle.get(AdapterConstants.PARAM_APP_ID);
+            String cpmFloorStr = (String) customParametersBundle.get(AdapterConstants.PARAM_CPM_FLOOR);
+            if(cpmFloorStr != null && !cpmFloorStr.isEmpty()) {
+                try {
+                    cpmFloor = Float.parseFloat(cpmFloorStr);
+                } catch (NumberFormatException e) {
+                    cpmFloor = 0.0F;
+                }
+            }
+        }
 
         maxInterstitialListener = maxIntListener;
         TempoAdListener tempoInterstitialListener = new TempoAdListener() {
@@ -141,9 +156,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                 return hasUserConsent;
             }
         };
+
+        String finalAppId = appId;
+        Float finalCpmFloor = cpmFloor;
         activity.runOnUiThread(() -> {
-            interstitialView = new InterstitialView(AppId, activity);
-            interstitialView.loadAd(activity, tempoInterstitialListener, cpmFloor, placementId);
+            interstitialView = new InterstitialView(finalAppId, activity);
+            interstitialView.loadAd(activity, tempoInterstitialListener, finalCpmFloor, placementId);
         });
     }
 
@@ -165,11 +183,24 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
         TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser);
 
-        String AppId = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_APP_ID);
-        String cpmFloorStr = (String) maxResponseParams.getCustomParameters().get(AdapterConstants.PARAM_CPM_FLOOR);
-        Float cpmFloor = cpmFloorStr != null ? Float.parseFloat(cpmFloorStr) : 0.0F;
+        String appId = null;
+        Float cpmFloor = 0.0f;
         String placementId = maxResponseParams.getThirdPartyAdPlacementId();
 
+        // Handle bad/null data from AppLovin
+        Bundle customParametersBundle = maxResponseParams.getCustomParameters();
+        if(customParametersBundle != null)
+        {
+            appId = (String) customParametersBundle.get(AdapterConstants.PARAM_APP_ID);
+            String cpmFloorStr = (String) customParametersBundle.get(AdapterConstants.PARAM_CPM_FLOOR);
+            if(cpmFloorStr != null && !cpmFloorStr.isEmpty()) {
+                try {
+                    cpmFloor = Float.parseFloat(cpmFloorStr);
+                } catch (NumberFormatException e) {
+                    cpmFloor = 0.0F;
+                }
+            }
+        }
 
         maxRewardedListener = maxRewListener;
         TempoAdListener tempoRewardedListener = new TempoAdListener() {
@@ -244,9 +275,11 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             }
         };
 
+        String finalAppId = appId;
+        Float finalCpmFloor = cpmFloor;
         activity.runOnUiThread(() -> {
-            rewardedView = new RewardedView(AppId, activity);
-            rewardedView.loadAd(activity, tempoRewardedListener, cpmFloor, placementId);
+            rewardedView = new RewardedView(finalAppId, activity);
+            rewardedView.loadAd(activity, tempoRewardedListener, finalCpmFloor, placementId);
         });
     }
 
