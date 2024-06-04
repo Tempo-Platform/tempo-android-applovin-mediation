@@ -1,11 +1,12 @@
 package com.applovin.mediation.adapters;
 
+// Generic
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.annotation.Keep;
 
+// AppLovin SDK
 import com.applovin.mediation.MaxReward;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
@@ -16,6 +17,7 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParamet
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.sdk.AppLovinSdk;
 
+// Tempo SDK
 import com.tempoplatform.ads.Constants;
 import com.tempoplatform.ads.InterstitialView;
 import com.tempoplatform.ads.RewardedView;
