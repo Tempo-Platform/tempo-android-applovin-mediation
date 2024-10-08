@@ -33,12 +33,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private boolean interstitialReady;
     private boolean rewardedReady;
 
-//    public MaxInterstitialAdapterListener maxInterstitialListener;
-//    public MaxRewardedAdapterListener maxRewardedListener;
-
     private Boolean hasUserConsent;
     private Boolean isDoNotSell;
-    private Boolean isAgeRestrictedUser;
 
     public TempoMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
@@ -71,8 +67,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
         hasUserConsent = maxResponseParams.hasUserConsent();
         isDoNotSell = maxResponseParams.isDoNotSell();
-        isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser, true);
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
@@ -105,8 +100,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
         hasUserConsent = maxResponseParams.hasUserConsent();
         isDoNotSell = maxResponseParams.isDoNotSell();
-        isAgeRestrictedUser = maxResponseParams.isAgeRestrictedUser();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell + "|" + isAgeRestrictedUser);
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
