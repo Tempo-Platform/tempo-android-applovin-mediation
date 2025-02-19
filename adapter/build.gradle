@@ -30,8 +30,8 @@ android {
 }
 dependencies {
     api 'com.applovin:applovin-sdk:[11.2,14.0)'
-    implementation 'io.github.tempo-platform:tempo-android-sdk:1.6.4'
-    //implementation(name:'tempo-android-sdk-release', ext:'aar')
+    implementation 'io.github.tempo-platform:tempo-android-sdk:1.6.5'
+    //implementation(name:'tempo-android-sdk-release_1_6_5_rc_0', ext:'aar')
 }
 
 
