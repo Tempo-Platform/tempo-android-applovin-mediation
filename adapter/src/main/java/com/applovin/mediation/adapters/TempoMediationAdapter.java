@@ -23,6 +23,7 @@ import com.tempoplatform.ads.TempoAdListener;
 import com.tempoplatform.ads.TempoUtils;
 import com.tempoplatform.ads.InterstitialView;
 import com.tempoplatform.ads.RewardedView;
+import com.tempoplatform.ads.TempoExternal;
 
 @Keep
 public class TempoMediationAdapter extends MediationAdapterBase implements MaxInterstitialAdapter, MaxRewardedAdapter {
@@ -33,8 +34,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     private boolean interstitialReady;
     private boolean rewardedReady;
 
-    private Boolean hasUserConsent;
-    private Boolean isDoNotSell;
+    private Boolean alHasUserConsent;
+    private Boolean alIsDoNotSell;
 
     public TempoMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
@@ -43,6 +44,38 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     @Override
     public void initialize(MaxAdapterInitializationParameters maxInitParams, Activity activity, final OnCompletionListener onCompletionListener) {
         TempoUtils.Say("TempoAdapter: init => " + maxInitParams.getServerParameters());
+
+        // Obtaining consent from users directly is the responsibility of the client developers themselves.
+        SetPrivacyFromParameters(maxInitParams);
+    }
+
+    /**
+     * Updates privacy parameters at init. Methods return NULL unless updated by developer.
+     */
+    private void SetPrivacyFromParameters(MaxAdapterInitializationParameters maxParams){
+
+        alHasUserConsent = maxParams.hasUserConsent();
+        alIsDoNotSell = maxParams.isDoNotSell();
+        updatePrivacyRules(alHasUserConsent, alIsDoNotSell);
+    }
+    /**
+     * Updates privacy parameters at ad load. Methods return NULL unless updated by developer.
+     */
+    private void SetPrivacyFromParameters(MaxAdapterResponseParameters maxParams){
+        // Returns NULL unless updated by developer.
+        alHasUserConsent = maxParams.hasUserConsent();
+        alIsDoNotSell = maxParams.isDoNotSell();
+        updatePrivacyRules(alHasUserConsent, alIsDoNotSell);
+    }
+
+    /**
+     * Handle privacy rules on SDK
+     */
+    private void updatePrivacyRules(Boolean hasUserConsent, Boolean isDoNotSell) {
+        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
+        // If null, assume consent has not been given yet
+        hasUserConsent = hasUserConsent == null ? false : hasUserConsent;
+        TempoExternal.stopProfileData(!hasUserConsent);
     }
 
     @Override
@@ -64,10 +97,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     public void loadInterstitialAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxInterstitialAdapterListener maxIntListener) {
         TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxResponseParams.getCustomParameters());
 
-        // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
-        hasUserConsent = maxResponseParams.hasUserConsent();
-        isDoNotSell = maxResponseParams.isDoNotSell();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
+        // Obtaining consent from users directly is the responsibility of the client developers themselves.
+        SetPrivacyFromParameters(maxResponseParams);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
@@ -97,10 +128,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
     public void loadRewardedAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxRewardedAdapterListener maxRewListener) {
         TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxResponseParams.getCustomParameters());
 
-        // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
-        hasUserConsent = maxResponseParams.hasUserConsent();
-        isDoNotSell = maxResponseParams.isDoNotSell();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
+        SetPrivacyFromParameters(maxResponseParams);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
@@ -179,8 +207,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (I, " + hasUserConsent + ")");
-                return hasUserConsent;
+                TempoUtils.Say("TempoAdapter: hasUserConsent (I, " + alHasUserConsent + ")");
+                return alHasUserConsent;
             }
         };
     }
@@ -249,8 +277,8 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (R, " + hasUserConsent + ")");
-                return hasUserConsent;
+                TempoUtils.Say("TempoAdapter: hasUserConsent (R, " + alHasUserConsent + ")");
+                return alHasUserConsent;
             }
         };
     }
