@@ -42,7 +42,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void initialize(MaxAdapterInitializationParameters maxInitParams, Activity activity, final OnCompletionListener onCompletionListener) {
-        TempoUtils.Say("TempoAdapter: init => " + maxInitParams.getServerParameters());
+        TempoUtils.say("TempoAdapter: init => " + maxInitParams.getServerParameters());
     }
 
     @Override
@@ -62,12 +62,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void loadInterstitialAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxInterstitialAdapterListener maxIntListener) {
-        TempoUtils.Say("TempoAdapter: loadInterstitialAd => " + maxResponseParams.getCustomParameters());
+        TempoUtils.say("TempoAdapter: loadInterstitialAd => " + maxResponseParams.getCustomParameters());
 
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
         hasUserConsent = maxResponseParams.hasUserConsent();
         isDoNotSell = maxResponseParams.isDoNotSell();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
+        TempoUtils.say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
@@ -87,7 +87,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void showInterstitialAd(MaxAdapterResponseParameters maxResponseParams, Activity activity, MaxInterstitialAdapterListener maxIntListener) {
-        TempoUtils.Say("TempoAdapter: showInterstitialAd");
+        TempoUtils.say("TempoAdapter: showInterstitialAd");
         if (interstitialView != null && interstitialReady) {
             interstitialView.showAd();
         }
@@ -95,12 +95,12 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void loadRewardedAd(MaxAdapterResponseParameters maxResponseParams, final Activity activity, MaxRewardedAdapterListener maxRewListener) {
-        TempoUtils.Say("TempoAdapter: loadRewardedAd => " + maxResponseParams.getCustomParameters());
+        TempoUtils.say("TempoAdapter: loadRewardedAd => " + maxResponseParams.getCustomParameters());
 
         // Obtaining consent from users directly is the responsibility of the client developers themselves. Returns NULL unless updated by developer.
         hasUserConsent = maxResponseParams.hasUserConsent();
         isDoNotSell = maxResponseParams.isDoNotSell();
-        TempoUtils.Say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
+        TempoUtils.say("TempoAdapter: " + hasUserConsent + "|" + isDoNotSell, true);
 
         // Extract parameters from response
         Bundle customParametersBundle = maxResponseParams.getCustomParameters();
@@ -120,7 +120,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
 
     @Override
     public void showRewardedAd(MaxAdapterResponseParameters maxResponseParams, Activity activity, MaxRewardedAdapterListener maxRewListener) {
-        TempoUtils.Say("TempoAdapter: showRewardedAd");
+        TempoUtils.say("TempoAdapter: showRewardedAd");
         if (rewardedView != null && rewardedReady) {
             rewardedView.showAd();
         }
@@ -133,32 +133,32 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         return new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (I)", true);
+                TempoUtils.say("TempoAdapter: onTempoAdFetchSucceeded (I)", true);
                 maxIntListener.onInterstitialAdLoaded();
                 interstitialReady = true;
             }
 
             @Override
             public void onTempoAdFetchFailed(String reason) {
-                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (I) - Reason: " + reason, true);
+                TempoUtils.say("TempoAdapter: onTempoAdFetchFailed (I) - Reason: " + reason, true);
                 maxIntListener.onInterstitialAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (I)", true);
+                TempoUtils.say("TempoAdapter: onTempoAdDisplayed (I)", true);
                 maxIntListener.onInterstitialAdDisplayed();
             }
 
             @Override
             public void onTempoAdShowFailed(String reason) {
-                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (I) - Reason: " + reason, true);
+                TempoUtils.say("TempoAdapter: onTempoAdShowFailed (I) - Reason: " + reason, true);
                 maxIntListener.onInterstitialAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdClosed() {
-                TempoUtils.Say("TempoAdapter: onTempoAdClosed (I)", true);
+                TempoUtils.say("TempoAdapter: onTempoAdClosed (I)", true);
                 maxIntListener.onInterstitialAdHidden();
                 interstitialReady = false;
             }
@@ -166,20 +166,20 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             @Override
             public String getTempoAdapterVersion() {
                 String versionInfo = "SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion();
-                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (I, " + versionInfo + ")");
+                TempoUtils.say("TempoAdapter: getTempoAdapterVersion (I, " + versionInfo + ")");
                 return getAdapterVersion();
             }
 
             @Override
             public String getTempoAdapterType() {
                 String adapterType = AdapterConstants.ADAPTER_TYPE;
-                TempoUtils.Say("TempoAdapter: getTempoAdapterType (I, Type: " + adapterType + ")");
+                TempoUtils.say("TempoAdapter: getTempoAdapterType (I, Type: " + adapterType + ")");
                 return adapterType;
             }
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (I, " + hasUserConsent + ")");
+                TempoUtils.say("TempoAdapter: hasUserConsent (I, " + hasUserConsent + ")");
                 return hasUserConsent;
             }
         };
@@ -192,32 +192,32 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
         return new TempoAdListener() {
             @Override
             public void onTempoAdFetchSucceeded() {
-                TempoUtils.Say("TempoAdapter: onTempoAdFetchSucceeded (R)",true);
+                TempoUtils.say("TempoAdapter: onTempoAdFetchSucceeded (R)",true);
                 maxRewListener.onRewardedAdLoaded();
                 rewardedReady = true;
             }
 
             @Override
             public void onTempoAdFetchFailed(String reason) {
-                TempoUtils.Say("TempoAdapter: onTempoAdFetchFailed (R=[" + reason + "])) ", true);
+                TempoUtils.say("TempoAdapter: onTempoAdFetchFailed (R=[" + reason + "])) ", true);
                 maxRewListener.onRewardedAdLoadFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdDisplayed() {
-                TempoUtils.Say("TempoAdapter: onTempoAdDisplayed (R)",true);
+                TempoUtils.say("TempoAdapter: onTempoAdDisplayed (R)",true);
                 maxRewListener.onRewardedAdDisplayed();
             }
 
             @Override
             public void onTempoAdShowFailed(String reason) {
-                TempoUtils.Say("TempoAdapter: onTempoAdShowFailed (R=[" + reason + "]) ", true);
+                TempoUtils.say("TempoAdapter: onTempoAdShowFailed (R=[" + reason + "]) ", true);
                 maxRewListener.onRewardedAdDisplayFailed(MaxAdapterError.UNSPECIFIED);
             }
 
             @Override
             public void onTempoAdClosed() {
-                TempoUtils.Say("TempoAdapter: MaxReward set",true);
+                TempoUtils.say("TempoAdapter: MaxReward set",true);
                 maxRewListener.onUserRewarded(new MaxReward() {
                     @Override
                     public String getLabel() {
@@ -230,26 +230,26 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
                     }
                 });
 
-                TempoUtils.Say("TempoAdapter: onTempoAdClosed (R)",true);
+                TempoUtils.say("TempoAdapter: onTempoAdClosed (R)",true);
                 maxRewListener.onRewardedAdHidden();
                 rewardedReady = false;
             }
 
             @Override
             public String getTempoAdapterVersion() {
-                TempoUtils.Say("TempoAdapter: getTempoAdapterVersion (R, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
+                TempoUtils.say("TempoAdapter: getTempoAdapterVersion (R, SDK=" + Constants.SDK_VERSION + ", Adapter=" + getAdapterVersion() + ")");
                 return getAdapterVersion();
             }
 
             @Override
             public String getTempoAdapterType() {
-                TempoUtils.Say("TempoAdapter: getTempoAdapterType (R, Type: " + AdapterConstants.ADAPTER_TYPE + ")");
+                TempoUtils.say("TempoAdapter: getTempoAdapterType (R, Type: " + AdapterConstants.ADAPTER_TYPE + ")");
                 return AdapterConstants.ADAPTER_TYPE ;
             }
 
             @Override
             public Boolean hasUserConsent() {
-                TempoUtils.Say("TempoAdapter: hasUserConsent (R, " + hasUserConsent + ")");
+                TempoUtils.say("TempoAdapter: hasUserConsent (R, " + hasUserConsent + ")");
                 return hasUserConsent;
             }
         };
@@ -277,7 +277,7 @@ public class TempoMediationAdapter extends MediationAdapterBase implements MaxIn
             try {
                 return Float.parseFloat(cpmFloorStr);
             } catch (NumberFormatException e) {
-                TempoUtils.Warn("Invalid CPM floor value: " + cpmFloorStr, true);
+                TempoUtils.warn("Invalid CPM floor value: " + cpmFloorStr, true);
             }
         }
         return 0.0f;
